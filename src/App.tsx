@@ -38,15 +38,16 @@ export const App: React.FC = () => {
         break;
 
       case 'all':
-      default: filtered = [...todos];
-      break;
+      default:
+        filtered = [...todos];
+        break;
     }
 
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
     if (normalizedQuery) {
       filtered = filtered.filter(todo =>
-        todo.title.toLowerCase().includes(normalizedQuery)
+        todo.title.toLowerCase().includes(normalizedQuery),
       );
     }
 
