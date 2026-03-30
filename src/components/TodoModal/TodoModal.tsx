@@ -7,9 +7,10 @@ import { getUser } from '../../api';
 interface Props {
   selectedTodo: Todo;
   onSelectTodo: (todo: Todo | null) => void;
+  setErr: (err: string) => void;
 }
 
-export const TodoModal: React.FC<Props> = ({ selectedTodo, onSelectTodo }) => {
+export const TodoModal: React.FC<Props> = ({ selectedTodo, onSelectTodo, setErr }) => {
   const { id, title, completed } = selectedTodo;
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -19,10 +20,11 @@ export const TodoModal: React.FC<Props> = ({ selectedTodo, onSelectTodo }) => {
       getUser(selectedTodo.userId)
         .then(setSelectedUser)
         .catch(() => {
-          throw new Error('Unable to load user');
-        });
+          setErr('Unable to load user');
+        })
     } else {
       setSelectedUser(null);
+      setErr('');
     }
   }, [selectedTodo]);
 

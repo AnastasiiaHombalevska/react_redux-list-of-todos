@@ -4,16 +4,20 @@ import { Todo } from '../../types/Todo';
 
 interface Props {
   todos: Todo[];
-  selectedTodo: Todo | null,
-  onSelectTodo: (todo: Todo | null) => void,
+  selectedTodo: Todo | null;
+  onSelectTodo: (todo: Todo | null) => void;
+  error: string;
 }
 
-export const TodoList: React.FC<Props> = ({ todos, selectedTodo, onSelectTodo }) => {
+export const TodoList: React.FC<Props> = ({
+  todos,
+  selectedTodo,
+  onSelectTodo,
+  error,
+}) => {
   return (
     <>
-      <p className="notification is-warning">
-        There are no todos matching current filter criteria
-      </p>
+      {error && <p className="notification is-warning">{error}</p>}
 
       <table className="table is-narrow is-fullwidth">
         <thead>
@@ -32,9 +36,8 @@ export const TodoList: React.FC<Props> = ({ todos, selectedTodo, onSelectTodo })
         </thead>
 
         <tbody>
-          {todos.map((todo, index) => {
+          {todos.map(todo => {
             const { id, title, completed } = todo;
-            const countNum = index + 1;
 
             return (
               <tr
@@ -43,15 +46,23 @@ export const TodoList: React.FC<Props> = ({ todos, selectedTodo, onSelectTodo })
                 className={`todo-container ${selectedTodo?.id === id ? 'has-background-info-light' : ''}`}
                 key={id}
               >
-                <td className="is-vcentered">{countNum}</td>
+                <td className="is-vcentered">{id}</td>
                 <td className="is-vcentered">
                   {completed && (
-                    <span className="icon" data-cy="iconCompleted"><i className="fas fa-check"></i></span>
+                    <span className="icon" data-cy="iconCompleted">
+                      <i className="fas fa-check"></i>
+                    </span>
                   )}
                 </td>
 
                 <td className="is-vcentered is-expanded">
-                  <p className={completed ? 'has-text-success' : 'has-text-danger'}>{title}</p>
+                  <p
+                    className={
+                      completed ? 'has-text-success' : 'has-text-danger'
+                    }
+                  >
+                    {title}
+                  </p>
                 </td>
 
                 <td className="has-text-right is-vcentered">
@@ -62,12 +73,14 @@ export const TodoList: React.FC<Props> = ({ todos, selectedTodo, onSelectTodo })
                     onClick={() => onSelectTodo(todo)}
                   >
                     <span className="icon">
-                      <i className={`far ${selectedTodo?.id === id ? 'fa-eye-slash' : 'fa-eye'}`} />
+                      <i
+                        className={`far ${selectedTodo?.id === id ? 'fa-eye-slash' : 'fa-eye'}`}
+                      />
                     </span>
                   </button>
                 </td>
               </tr>
-            )
+            );
           })}
         </tbody>
       </table>
