@@ -1,29 +1,36 @@
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+
 import { Loader, TodoFilter, TodoList, TodoModal } from './components';
 import { Todo } from './types/Todo';
 import { useEffect, useState } from 'react';
 import { getTodos } from './api';
-import { Status } from './types/Status';
+import { AppDispatch, RootState } from './app/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadTodos } from './features/todos';
 
 export const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const todos = useSelector((state: RootState) => state.todos.items);
+  const filterStatus = useSelector((state: RootState) => state.filter.status);
+  const searchQuery = useSelector((state: RootState) => state.filter.query);
+
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null); // current
+
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
-  const [filterStatus, setFilterStatus] = useState<Status>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [err, setErr] = useState('');
 
   useEffect(() => {
     getTodos()
       .then((todosData: Todo[]) => {
-        setTodos(todosData);
+        dispatch(loadTodos(todosData));
       })
       .catch(() => {
         setErr('Unable to load todos');
       })
       .finally(() => setErr(''));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     let filtered = [...todos];
@@ -68,14 +75,12 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter
-                onSelectChange={setFilterStatus}
-                onInputChange={setSearchQuery}
-              />
+              <TodoFilter />
             </div>
 
             <div className="block">
               {todos.length === 0 && <Loader />}
+
               <TodoList
                 todos={filteredTodos}
                 selectedTodo={selectedTodo}

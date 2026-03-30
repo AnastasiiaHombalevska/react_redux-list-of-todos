@@ -1,5 +1,4 @@
 /* eslint-disable */
-// import React, { useEffect, useState } from 'react';
 import { Todo } from '../../types/Todo';
 
 interface Props {

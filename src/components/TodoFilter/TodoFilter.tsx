@@ -1,23 +1,11 @@
-import React, { useState } from 'react';
+import { RootState } from '../../app/store';
+import { setFilterStatus, setSearchQuery } from '../../features/filter';
 import { Status } from '../../types/Status';
+import { useDispatch, useSelector } from 'react-redux';
 
-interface Props {
-  onSelectChange: (status: Status) => void;
-  onInputChange: (query: string) => void;
-}
-
-export const TodoFilter: React.FC<Props> = ({
-  onSelectChange,
-  onInputChange,
-}) => {
-  const [queryValue, setQueryValue] = useState('');
-
-  function onQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const val = e.target.value.trim().toLowerCase();
-
-    setQueryValue(val);
-    onInputChange(val);
-  }
+export const TodoFilter: React.FC = () => {
+  const dispatch = useDispatch();
+  const searchQuery = useSelector((state: RootState) => state.filter.query);
 
   return (
     <form
@@ -30,7 +18,7 @@ export const TodoFilter: React.FC<Props> = ({
             id="statusSelect"
             data-cy="statusSelect"
             onChange={e =>
-              onSelectChange(e.target.value.toLowerCase() as Status)
+              dispatch(setFilterStatus(e.target.value.toLowerCase() as Status))
             }
           >
             <option value="all">All</option>
@@ -46,14 +34,14 @@ export const TodoFilter: React.FC<Props> = ({
           type="text"
           className="input"
           placeholder="Search..."
-          value={queryValue}
-          onChange={onQueryChange}
+          value={searchQuery}
+          onChange={e => dispatch(setSearchQuery(e.target.value.toLowerCase()))}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />
         </span>
 
-        {queryValue && (
+        {searchQuery && (
           <span className="icon is-right" style={{ pointerEvents: 'all' }}>
             {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
             <button
@@ -61,8 +49,8 @@ export const TodoFilter: React.FC<Props> = ({
               type="button"
               className="delete"
               onClick={() => {
-                onInputChange('');
-                setQueryValue('');
+                dispatch(setSearchQuery(''));
+                dispatch(setFilterStatus('all'));
               }}
             />
           </span>
