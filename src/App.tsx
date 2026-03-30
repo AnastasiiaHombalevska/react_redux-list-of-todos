@@ -15,8 +15,9 @@ export const App: React.FC = () => {
   const todos = useSelector((state: RootState) => state.todos.items);
   const filterStatus = useSelector((state: RootState) => state.filter.status);
   const searchQuery = useSelector((state: RootState) => state.filter.query);
-
-  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null); // current
+  const selectedTodo = useSelector(
+    (state: RootState) => state.currentTodo.item,
+  );
 
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [err, setErr] = useState('');
@@ -81,24 +82,13 @@ export const App: React.FC = () => {
             <div className="block">
               {todos.length === 0 && <Loader />}
 
-              <TodoList
-                todos={filteredTodos}
-                selectedTodo={selectedTodo}
-                onSelectTodo={setSelectedTodo}
-                error={err}
-              />
+              <TodoList todos={filteredTodos} error={err} />
             </div>
           </div>
         </div>
       </div>
 
-      {selectedTodo && (
-        <TodoModal
-          selectedTodo={selectedTodo}
-          onSelectTodo={setSelectedTodo}
-          setErr={setErr}
-        />
-      )}
+      {selectedTodo && <TodoModal setErr={setErr} />}
     </>
   );
 };

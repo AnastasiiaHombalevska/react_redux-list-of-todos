@@ -16,8 +16,8 @@ export const todosSlice = createSlice({
     loadTodos(state, action: PayloadAction<Todo[]>) {
       return {
         ...state,
-        items: action.payload
-      }
+        items: action.payload,
+      };
     },
   },
 });

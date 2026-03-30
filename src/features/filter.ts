@@ -18,14 +18,14 @@ const filterSlice = createSlice({
     setSearchQuery(state, action: PayloadAction<string>) {
       return {
         ...state,
-        query: action.payload
-      }
+        query: action.payload,
+      };
     },
     setFilterStatus(state, action: PayloadAction<Status>) {
       return {
         ...state,
-        status: action.payload
-      }
+        status: action.payload,
+      };
     },
   },
 });

@@ -1,19 +1,21 @@
 /* eslint-disable */
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../app/store';
 import { Todo } from '../../types/Todo';
+import { selectTodo } from '../../features/currentTodo';
 
 interface Props {
   todos: Todo[];
-  selectedTodo: Todo | null;
-  onSelectTodo: (todo: Todo | null) => void;
   error: string;
 }
 
 export const TodoList: React.FC<Props> = ({
   todos,
-  selectedTodo,
-  onSelectTodo,
   error,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedTodo = useSelector((state: RootState) => state.currentTodo.item);
+
   return (
     <>
       {error && <p className="notification is-warning">{error}</p>}
@@ -69,7 +71,7 @@ export const TodoList: React.FC<Props> = ({
                     data-cy="selectButton"
                     className="button"
                     type="button"
-                    onClick={() => onSelectTodo(todo)}
+                    onClick={() => dispatch(selectTodo(todo))}
                   >
                     <span className="icon">
                       <i
