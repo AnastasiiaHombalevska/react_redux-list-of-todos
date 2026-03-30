@@ -10,13 +10,13 @@ export const TodoFilter: React.FC<Props> = ({
   onSelectChange,
   onInputChange,
 }) => {
-  const [value, setValue] = useState('');
+  const [queryValue, setQueryValue] = useState('');
 
   function onQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value.trim().toLowerCase();
+    const val = e.target.value.trim().toLowerCase();
 
-    setValue(value);
-    onInputChange(value);
+    setQueryValue(val);
+    onInputChange(val);
   }
 
   return (
@@ -29,7 +29,9 @@ export const TodoFilter: React.FC<Props> = ({
           <select
             id="statusSelect"
             data-cy="statusSelect"
-            onChange={e => onSelectChange(e.target.value.toLowerCase() as Status)}
+            onChange={e =>
+              onSelectChange(e.target.value.toLowerCase() as Status)
+            }
           >
             <option value="all">All</option>
             <option value="active">Active</option>
@@ -44,14 +46,14 @@ export const TodoFilter: React.FC<Props> = ({
           type="text"
           className="input"
           placeholder="Search..."
-          value={value}
+          value={queryValue}
           onChange={onQueryChange}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />
         </span>
 
-        {value && (
+        {queryValue && (
           <span className="icon is-right" style={{ pointerEvents: 'all' }}>
             {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
             <button
@@ -60,7 +62,7 @@ export const TodoFilter: React.FC<Props> = ({
               className="delete"
               onClick={() => {
                 onInputChange('');
-                setValue('');
+                setQueryValue('');
               }}
             />
           </span>

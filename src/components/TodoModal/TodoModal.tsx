@@ -10,7 +10,11 @@ interface Props {
   setErr: (err: string) => void;
 }
 
-export const TodoModal: React.FC<Props> = ({ selectedTodo, onSelectTodo, setErr }) => {
+export const TodoModal: React.FC<Props> = ({
+  selectedTodo,
+  onSelectTodo,
+  setErr,
+}) => {
   const { id, title, completed } = selectedTodo;
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -21,7 +25,7 @@ export const TodoModal: React.FC<Props> = ({ selectedTodo, onSelectTodo, setErr 
         .then(setSelectedUser)
         .catch(() => {
           setErr('Unable to load user');
-        })
+        });
     } else {
       setSelectedUser(null);
       setErr('');
