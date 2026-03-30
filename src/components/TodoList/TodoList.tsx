@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store';
 import { Todo } from '../../types/Todo';
@@ -9,12 +8,11 @@ interface Props {
   error: string;
 }
 
-export const TodoList: React.FC<Props> = ({
-  todos,
-  error,
-}) => {
+export const TodoList: React.FC<Props> = ({ todos, error }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const selectedTodo = useSelector((state: RootState) => state.currentTodo.item);
+  const selectedTodo = useSelector(
+    (state: RootState) => state.currentTodo.item,
+  );
 
   return (
     <>
@@ -39,19 +37,21 @@ export const TodoList: React.FC<Props> = ({
         <tbody>
           {todos.map(todo => {
             const { id, title, completed } = todo;
+            const isSelected = selectedTodo?.id === id;
 
             return (
               <tr
                 data-cy="todo"
                 id={id.toString()}
-                className={`todo-container ${selectedTodo?.id === id ? 'has-background-info-light' : ''}`}
+                className={`todo-container ${isSelected ? 'has-background-info-light' : ''}`}
                 key={id}
               >
                 <td className="is-vcentered">{id}</td>
+
                 <td className="is-vcentered">
                   {completed && (
                     <span className="icon" data-cy="iconCompleted">
-                      <i className="fas fa-check"></i>
+                      <i className="fas fa-check" />
                     </span>
                   )}
                 </td>
@@ -71,11 +71,13 @@ export const TodoList: React.FC<Props> = ({
                     data-cy="selectButton"
                     className="button"
                     type="button"
-                    onClick={() => dispatch(selectTodo(todo))}
+                    onClick={() =>
+                      dispatch(selectTodo(isSelected ? null : todo))
+                    }
                   >
                     <span className="icon">
                       <i
-                        className={`far ${selectedTodo?.id === id ? 'fa-eye-slash' : 'fa-eye'}`}
+                        className={`far ${isSelected ? 'fa-eye-slash' : 'fa-eye'}`}
                       />
                     </span>
                   </button>

@@ -21,8 +21,11 @@ export const App: React.FC = () => {
 
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [err, setErr] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
+
     getTodos()
       .then((todosData: Todo[]) => {
         dispatch(loadTodos(todosData));
@@ -30,7 +33,9 @@ export const App: React.FC = () => {
       .catch(() => {
         setErr('Unable to load todos');
       })
-      .finally(() => setErr(''));
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [dispatch]);
 
   useEffect(() => {
@@ -38,11 +43,11 @@ export const App: React.FC = () => {
 
     switch (filterStatus) {
       case 'active':
-        filtered = [...todos].filter(todo => !todo.completed);
+        filtered = todos.filter(todo => !todo.completed);
         break;
 
       case 'completed':
-        filtered = [...todos].filter(todo => todo.completed);
+        filtered = todos.filter(todo => todo.completed);
         break;
 
       case 'all':
@@ -63,7 +68,7 @@ export const App: React.FC = () => {
 
     if (filtered.length === 0 && (normalizedQuery || filterStatus !== 'all')) {
       setErr('There are no todos matching current filter criteria');
-    } else {
+    } else if (err !== 'Unable to load todos') {
       setErr('');
     }
   }, [todos, filterStatus, searchQuery]);
@@ -80,9 +85,11 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              {todos.length === 0 && <Loader />}
-
-              <TodoList todos={filteredTodos} error={err} />
+              {isLoading ? (
+                <Loader />
+              ) : (
+                <TodoList todos={filteredTodos} error={err} />
+              )}
             </div>
           </div>
         </div>

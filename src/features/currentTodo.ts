@@ -16,8 +16,8 @@ export const currentTodoSlice = createSlice({
     selectTodo(state, action: PayloadAction<Todo | null>) {
       return {
         ...state,
-        item: action.payload
-      }
+        item: action.payload,
+      };
     },
   },
 });

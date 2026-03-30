@@ -20,6 +20,9 @@ export const TodoModal: React.FC<Props> = ({ setErr }) => {
 
   useEffect(() => {
     if (selectedTodo) {
+      setSelectedUser(null);
+      setErr('');
+
       getUser(selectedTodo.userId)
         .then(setSelectedUser)
         .catch(() => {
@@ -29,10 +32,14 @@ export const TodoModal: React.FC<Props> = ({ setErr }) => {
       setSelectedUser(null);
       setErr('');
     }
-  }, [selectedTodo]);
+  }, [selectedTodo, setErr]);
+
+  if (!selectedTodo) {
+    return null;
+  }
 
   return (
-    <div className={`modal ${selectedTodo ? 'is-active' : ''}`} data-cy="modal">
+    <div className="modal is-active" data-cy="modal">
       <div className="modal-background" />
 
       {!selectedUser ? (
@@ -44,7 +51,7 @@ export const TodoModal: React.FC<Props> = ({ setErr }) => {
               className="modal-card-title has-text-weight-medium"
               data-cy="modal-header"
             >
-              Todo #{selectedTodo?.id}
+              Todo #{selectedTodo.id}
             </div>
 
             {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
@@ -58,11 +65,11 @@ export const TodoModal: React.FC<Props> = ({ setErr }) => {
 
           <div className="modal-card-body">
             <p className="block" data-cy="modal-title">
-              {selectedTodo?.title}
+              {selectedTodo.title}
             </p>
 
             <p className="block" data-cy="modal-user">
-              {selectedTodo?.completed ? (
+              {selectedTodo.completed ? (
                 <strong className="has-text-success">Done</strong>
               ) : (
                 <strong className="has-text-danger">Planned</strong>
